@@ -1,0 +1,59 @@
+version: "3.9"
+
+services:
+  portainer:
+    image: portainer/portainer-ce
+    container_name: portainer
+    ports:
+      - "9000:9000"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "portainer_data:/data"
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+    ports:
+      - "8080:8080"  # Redirige le port 8080 pour accéder à Adminer
+    depends_on:
+      - postgres
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "${DEV_FRONT_PORT}:3000"
+    environment:
+      NODE_ENV: ${NODE_ENV}
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend
+    ports:
+      - "${DEV_BACK_PORT}:4000"
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      DATABASE_URL: ${DATABASE_URL}
+    depends_on:
+      - postgres
+
+volumes:
+  portainer_data:
+  postgres_data:
