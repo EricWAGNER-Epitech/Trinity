@@ -1,22 +1,20 @@
-# backend/Dockerfile
-# Utilisez l'image de Node.js 18 comme base
+# Dockerfile pour le backend Node.js
 FROM node:18
 
-# Définissez le dossier de travail dans le conteneur
+# Définir le répertoire de travail
 WORKDIR /app
 
-# Copiez les fichiers package.json et package-lock.json dans le conteneur
+# Copier les fichiers package.json et package-lock.json
 COPY package*.json ./
 
-# Installez les dépendances
+# Installer les dépendances
 RUN npm install
 
-# Copiez tous les fichiers dans le conteneur
+# Copier le reste du code de l'application
 COPY . .
 
-# Exposez le port du backend (4000)
+# Exposer le port de l'application
 EXPOSE 4000
 
-# Commande pour lancer l'application en mode développement
-# Pour Express, utilisez "node server.js"
-CMD ["npm", "run", "start:dev"] # Pour Nest.js
+# Commande pour démarrer l'application
+CMD ["node", "index.js"]  # Changez "index.js" si le point d'entrée de votre app est différent
