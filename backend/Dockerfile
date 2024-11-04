@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 4000
 
 # Commande pour démarrer l'application
-CMD ["node", "index.js"]  # Changez "index.js" si le point d'entrée de votre app est différent
+CMD ["node", "server.js"]
